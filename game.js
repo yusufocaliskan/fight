@@ -24,10 +24,18 @@ const enemyKeyboard = new Keyboard({
     arrowdown: 'bend',
   },
 });
-
 enemyKeyboard.listener();
+const testKeyboard = new Keyboard({
+  keymap: {
+    g: 'backward',
+    j: 'forward',
+    y: 'jump',
+    h: 'bend',
+  },
+});
+testKeyboard.listener();
 
-const player = new Sprite({
+const player = new Player({
   c: c,
   position: {x: 0, y: 0},
   velocity: {y: 10, x: 10},
@@ -42,9 +50,13 @@ const player = new Sprite({
   },
   playerWidth: 50,
   playerHeight: 150,
+  colors: {
+    underAttack: 'pink',
+    idle: 'red',
+  },
 });
 
-const enemy = new Sprite({
+const enemy = new Player({
   c: c,
   position: {x: 500, y: 100},
   velocity: {y: 10, x: 10},
@@ -60,9 +72,38 @@ const enemy = new Sprite({
   target: player,
   playerWidth: 50,
   playerHrighr: 150,
+  isCollision: false,
+  colors: {
+    underAttack: 'red',
+    idle: 'yellow',
+  },
 });
 
-const collusion = new Collision({objects: [player, enemy]});
+const test = new Player({
+  c: c,
+  position: {x: 200, y: 100},
+  velocity: {y: 10, x: 10},
+  canvas: canvas,
+  gravity: gravity,
+  keyboard: testKeyboard,
+  color: 'yellow',
+  attackBox: {
+    height: 50,
+    width: 100,
+    color: 'green',
+  },
+  target: player,
+  playerWidth: 50,
+  playerHrighr: 150,
+  isCollision: false,
+  colors: {
+    underAttack: 'red',
+    idle: 'yellow',
+  },
+});
+
+const collusionOfPlayerAndEnemy = new Collision({players: [player, enemy]});
+const collusionOfBulletAndEnemy = new Collision({players: [test, enemy]});
 
 //Animation
 function animate() {
@@ -70,27 +111,12 @@ function animate() {
   c.fillStyle = 'black';
 
   c.fillRect(0, 0, canvas.width, canvas.height);
-  collusion.detectCollisions();
-  if (collusion.isCollision) {
-    player.color = 'pink';
-    enemy.color = 'orange';
-  } else {
-    player.color = 'red';
-    enemy.color = 'yellow';
-  }
+  collusionOfPlayerAndEnemy.detectCollisions();
+  collusionOfBulletAndEnemy.detectCollisions();
 
-  player.update();
-  enemy.update();
-
-  //Atacking!
-  // if (
-  //   player.attackBox.position.x + player.attackBox.width >= enemy.position.y &&
-  //   player.attackBox.position.x <= enemy.position.x + enemy.playerWidth &&
-  //   player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
-  //   player.attackBox.position.y <= enemy.position.y + enemy.height
-  // ) {
-  //   console.log('ATACK!!!');
-  // }
+  player.update({isCollision: collusionOfPlayerAndEnemy.isCollision});
+  enemy.update({isCollision: collusionOfPlayerAndEnemy.isCollision});
+  test.update({isCollision: collusionOfBulletAndEnemy.isCollision});
 }
 
 animate();

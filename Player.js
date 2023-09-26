@@ -1,4 +1,4 @@
-class Sprite {
+class Player {
   constructor({
     c,
     canvas,
@@ -10,6 +10,8 @@ class Sprite {
     keyboard,
     playerHeight = 150,
     playerWidth = 50,
+    attack,
+    colors,
   }) {
     this.c = c;
     this.position = position;
@@ -22,6 +24,8 @@ class Sprite {
     this.keyboard = keyboard;
     this.jumpHeight = 6;
     this.maxJumpHeight = 0.4;
+    this.attack = attack;
+    this.colors = colors;
     this.attackBox = {
       ...attackBox,
       position: this.position,
@@ -53,7 +57,7 @@ class Sprite {
     );
   }
 
-  update() {
+  update({isCollision}) {
     this.draw();
 
     //Start to down player from sky
@@ -75,6 +79,17 @@ class Sprite {
 
     if (this.keyboard.currentState == 'jump') {
       this.velocity.y = -this.jumpHeight;
+    }
+    if (this.keyboard.currentState == 'atack') {
+      attack.isAttacking = true;
+    }
+
+    //When any collision!
+    //run some animation changing colors instead
+    if (isCollision) {
+      this.color = this.colors.underAttack;
+    } else {
+      this.color = this.colors.idle;
     }
   }
 

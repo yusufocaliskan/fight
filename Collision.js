@@ -1,6 +1,6 @@
 class Collision {
-  constructor({objects}) {
-    this.objects = objects;
+  constructor({players}) {
+    this.players = players;
     this.isCollision = false;
   }
 
@@ -13,12 +13,14 @@ class Collision {
     );
   }
 
-  //Detect if there is any collision between given objects
+  //Detect if there is any collision between given players
   detectCollisions() {
-    for (let i = 0; i <= this.objects.length; i++) {
-      for (let j = i + 1; j <= this.objects.length; j++) {
-        if (this.areObjectsColliding(this.objects[i], this.objects[j])) {
+    for (let i = 0; i <= this.players.length; i++) {
+      for (let j = i + 1; j <= this.players.length; j++) {
+        if (this.areObjectsColliding(this.players[i], this.players[j])) {
           this.isCollision = true;
+
+          //Waith for a while.
           setTimeout(() => {
             this.isCollision = false;
           }, [300]);

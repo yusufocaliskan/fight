@@ -7,10 +7,15 @@ class Keyboard {
       w: 'jump',
       d: 'forward',
       s: 'bend',
+      g: 'backward',
+      y: 'jump',
+      j: 'forward',
+      h: 'bend',
       arrowleft: 'backward',
       arrowup: 'jump',
       arrowright: 'forward',
       rowdown: 'bend',
+      space: 'attack',
     };
 
     this.currentState = {
@@ -18,18 +23,21 @@ class Keyboard {
       jump: false,
       forward: false,
       bend: false,
+      attack: false,
     };
   }
 
   listener() {
     document.addEventListener('keydown', e => {
-      console.log('e.key.toLocaleLowerCase()', e.key.toLocaleLowerCase());
-      if (Object.keys(this.keymap).includes(e.key.toLocaleLowerCase())) {
-        this.currentState = this.keysLookUp[e.key.toLocaleLowerCase()];
+      const key = e.code.toLocaleLowerCase().replace('key', '');
+      console.log('KEYY', key);
+      if (Object.keys(this.keymap).includes(key)) {
+        this.currentState = this.keysLookUp[key];
       }
     });
     document.addEventListener('keyup', e => {
-      if (Object.keys(this.keymap).includes(e.key.toLocaleLowerCase())) {
+      const key = e.code.toLocaleLowerCase().replace('key', '');
+      if (Object.keys(this.keymap).includes(key)) {
         this.currentState = '';
       }
     });
